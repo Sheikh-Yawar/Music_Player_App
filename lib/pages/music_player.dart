@@ -10,6 +10,7 @@ import 'package:music_app/StateManagement/state_management.dart';
 import 'package:music_app/model/song_model.dart';
 import 'package:music_app/widgets/glass_morphism.dart';
 import 'package:music_app/widgets/neumorphic_button.dart';
+import 'package:sizer/sizer.dart';
 
 class MusicPlayer extends ConsumerStatefulWidget {
   AudioPlayer player;
@@ -120,21 +121,22 @@ class _MusicPlayerState extends ConsumerState<MusicPlayer> {
               ),
               child: Material(
                 elevation: 10,
-                child: SizedBox(
-                  height: 400,
-                  width: 250,
-                  child: songs[index].image,
+                child: FittedBox(
+                  fit: BoxFit.contain,
+                  child: SizedBox(
+                    height: 50.h,
+                    width: 65.w,
+                    child: songs[index].image,
+                  ),
                 ),
               ),
             ),
             const SizedBox(
               height: 15,
             ),
-            Flexible(
-              child: marqueeText(
-                songs,
-                index,
-              ),
+            marqueeText(
+              songs,
+              index,
             ),
             SizedBox(
               width: 120,
@@ -147,11 +149,8 @@ class _MusicPlayerState extends ConsumerState<MusicPlayer> {
                 ),
               ),
             ),
-            const Flexible(
-              fit: FlexFit.loose,
-              child: SizedBox(
-                height: 30,
-              ),
+            const SizedBox(
+              height: 30,
             ),
             Column(
               children: [
@@ -160,7 +159,7 @@ class _MusicPlayerState extends ConsumerState<MusicPlayer> {
                   child: ProgressBar(
                     progressBarColor: const Color(0xffe16e03),
                     thumbColor: Colors.white,
-                    thumbRadius: 15.0,
+                    thumbRadius: 12.0,
                     baseBarColor: const Color(0xff83909c),
                     timeLabelTextStyle: GoogleFonts.lora(
                       fontSize: 13,
@@ -185,7 +184,7 @@ class _MusicPlayerState extends ConsumerState<MusicPlayer> {
                     left: 20.0,
                     right: 20,
                     top: 20,
-                    bottom: 30,
+                    bottom: 40,
                   ),
                   child: GlassBox(
                       height: 100.0,
@@ -194,119 +193,129 @@ class _MusicPlayerState extends ConsumerState<MusicPlayer> {
                         padding: const EdgeInsets.symmetric(
                           horizontal: 10.0,
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 4.0),
-                              child: LikeButton(
-                                onTap: (_) {
-                                  stateNotifier.likeSong(index);
-                                  return Future.delayed(
-                                    const Duration(seconds: 0),
-                                  );
-                                },
-                                size: 38,
-                                isLiked: songs[index].isLiked,
+                        child: FittedBox(
+                          fit: BoxFit.contain,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 4.0),
+                                child: LikeButton(
+                                  onTap: (_) {
+                                    stateNotifier.likeSong(index);
+                                    return Future.delayed(
+                                      const Duration(seconds: 0),
+                                    );
+                                  },
+                                  size: 38,
+                                  isLiked: songs[index].isLiked,
+                                ),
                               ),
-                            ),
-                            Row(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(30),
-                                  child: Material(
-                                    color: Colors.transparent,
-                                    child: IconButton(
-                                      onPressed: () async {
-                                        changeSong(
-                                            songs, index, stateNotifier, false);
-                                      },
-                                      icon: const Icon(
-                                        FontAwesomeIcons.backwardStep,
-                                        color: Colors.white,
+                              const SizedBox(
+                                width: 40,
+                              ),
+                              Row(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(30),
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      child: IconButton(
+                                        onPressed: () async {
+                                          changeSong(songs, index,
+                                              stateNotifier, false);
+                                        },
+                                        icon: const Icon(
+                                          FontAwesomeIcons.backwardStep,
+                                          color: Colors.white,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    if (!songs[index].isPlaying) {
-                                      stateNotifier.resetplayPause();
-                                      stateNotifier.playPause(index);
-                                      _player.play();
-                                    } else {
-                                      _player.pause();
-                                      stateNotifier.playPause(index);
-                                    }
-                                  },
-                                  child: StreamBuilder<PlayerState>(
-                                    stream: _player.playerStateStream,
-                                    builder: (_, snapshot) {
-                                      final playerState = snapshot.data;
-                                      if (playerState?.processingState ==
-                                          ProcessingState.completed) {
-                                        changeSong(
-                                          songs,
-                                          index,
-                                          stateNotifier,
-                                          true,
-                                        );
+                                  GestureDetector(
+                                    onTap: () {
+                                      if (!songs[index].isPlaying) {
+                                        stateNotifier.resetplayPause();
+                                        stateNotifier.playPause(index);
+                                        _player.play();
+                                      } else {
+                                        _player.pause();
+                                        stateNotifier.playPause(index);
                                       }
-                                      return neumorphicButton(
-                                        songs[index].isPlaying,
-                                        70.0,
-                                        70.0,
-                                        40,
-                                      );
                                     },
-                                  ),
-                                ),
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(30),
-                                  child: Material(
-                                    color: Colors.transparent,
-                                    child: IconButton(
-                                        onPressed: () async {
+                                    child: StreamBuilder<PlayerState>(
+                                      stream: _player.playerStateStream,
+                                      builder: (_, snapshot) {
+                                        final playerState = snapshot.data;
+                                        if (playerState?.processingState ==
+                                            ProcessingState.completed) {
                                           changeSong(
                                             songs,
                                             index,
                                             stateNotifier,
                                             true,
                                           );
-                                        },
-                                        icon: const Icon(
-                                          FontAwesomeIcons.forwardStep,
-                                          color: Colors.white,
-                                        )),
+                                        }
+                                        return neumorphicButton(
+                                          songs[index].isPlaying,
+                                          70.0,
+                                          70.0,
+                                          40,
+                                        );
+                                      },
+                                    ),
                                   ),
-                                )
-                              ],
-                            ),
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(30),
-                              child: Material(
-                                color: Colors.transparent,
-                                child: IconButton(
-                                    onPressed: () {
-                                      if (isLoopModePressed == true) {
-                                        _player.setLoopMode(LoopMode.off);
-                                      } else {
-                                        _player.setLoopMode(LoopMode.one);
-                                      }
-
-                                      setState(() {
-                                        isLoopModePressed = !isLoopModePressed;
-                                      });
-                                    },
-                                    icon: Icon(
-                                      FontAwesomeIcons.repeat,
-                                      color: isLoopModePressed == true
-                                          ? const Color(0xffe16e03)
-                                          : Colors.white,
-                                    )),
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(30),
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      child: IconButton(
+                                          onPressed: () async {
+                                            changeSong(
+                                              songs,
+                                              index,
+                                              stateNotifier,
+                                              true,
+                                            );
+                                          },
+                                          icon: const Icon(
+                                            FontAwesomeIcons.forwardStep,
+                                            color: Colors.white,
+                                          )),
+                                    ),
+                                  )
+                                ],
                               ),
-                            )
-                          ],
+                              const SizedBox(
+                                width: 40,
+                              ),
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(30),
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: IconButton(
+                                      onPressed: () {
+                                        if (isLoopModePressed == true) {
+                                          _player.setLoopMode(LoopMode.off);
+                                        } else {
+                                          _player.setLoopMode(LoopMode.one);
+                                        }
+
+                                        setState(() {
+                                          isLoopModePressed =
+                                              !isLoopModePressed;
+                                        });
+                                      },
+                                      icon: Icon(
+                                        FontAwesomeIcons.repeat,
+                                        color: isLoopModePressed == true
+                                            ? const Color(0xffe16e03)
+                                            : Colors.white,
+                                      )),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       )),
                 ),
@@ -347,8 +356,8 @@ Widget marqueeText(
         ? Marquee(
             text: songs[index].title,
             style: textStyle,
-            blankSpace: 80,
-            velocity: 35.0,
+            blankSpace: 100,
+            velocity: 30.0,
           )
         : Text(
             songs[index].title,

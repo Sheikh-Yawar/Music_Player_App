@@ -100,7 +100,7 @@ class _MusicListState extends ConsumerState<MusicList> {
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 letterSpacing: 2,
-                fontSize: 30,
+                fontSize: 25,
               ),
             ),
           ),

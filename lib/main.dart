@@ -11,17 +11,20 @@ import 'package:music_app/theme_data.dart';
 import 'package:music_app/utils/get_songs_images.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:on_audio_query/on_audio_query.dart';
+import 'package:sizer/sizer.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   runApp(
     ProviderScope(
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        themeMode: ThemeMode.dark,
-        darkTheme: MyTheme.themeData,
-        home: const SplashScreen(),
+      child: Sizer(
+        builder: ((context, orientation, deviceType) => MaterialApp(
+              debugShowCheckedModeBanner: false,
+              themeMode: ThemeMode.dark,
+              darkTheme: MyTheme.themeData,
+              home: const SplashScreen(),
+            )),
       ),
     ),
   );
