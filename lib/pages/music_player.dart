@@ -147,8 +147,11 @@ class _MusicPlayerState extends ConsumerState<MusicPlayer> {
                 ),
               ),
             ),
-            const SizedBox(
-              height: 30,
+            const Flexible(
+              fit: FlexFit.loose,
+              child: SizedBox(
+                height: 30,
+              ),
             ),
             Column(
               children: [
@@ -182,7 +185,7 @@ class _MusicPlayerState extends ConsumerState<MusicPlayer> {
                     left: 20.0,
                     right: 20,
                     top: 20,
-                    bottom: 35,
+                    bottom: 30,
                   ),
                   child: GlassBox(
                       height: 100.0,
@@ -251,9 +254,9 @@ class _MusicPlayerState extends ConsumerState<MusicPlayer> {
                                       }
                                       return neumorphicButton(
                                         songs[index].isPlaying,
-                                        80.0,
-                                        80.0,
-                                        50,
+                                        70.0,
+                                        70.0,
+                                        40,
                                       );
                                     },
                                   ),
@@ -333,8 +336,7 @@ Widget marqueeText(
 ) {
   TextStyle textStyle = const TextStyle(
     color: Colors.white,
-    fontSize: 24,
-    fontWeight: FontWeight.bold,
+    fontSize: 20,
   );
   return SizedBox(
     width: 270,

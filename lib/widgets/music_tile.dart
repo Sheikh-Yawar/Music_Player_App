@@ -87,8 +87,7 @@ Widget musicTile(
                     overflow: TextOverflow.ellipsis,
                     softWrap: false,
                     style: const TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
                     ),
                   ),
                   Row(
