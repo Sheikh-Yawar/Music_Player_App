@@ -1,11 +1,11 @@
 import 'dart:io';
-import 'package:permission_handler/permission_handler.dart';
+
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:music_app/model/song_model.dart';
+import 'package:ringtone_set/ringtone_set.dart';
 import 'package:music_app/pages/music_player.dart';
 import 'package:music_app/utils/format_time.dart';
 import 'package:music_app/widgets/neumorphic_button.dart';
@@ -14,15 +14,14 @@ import 'package:share_plus/share_plus.dart';
 import '../StateManagement/state_management.dart';
 import 'glass_morphism.dart';
 
-int previousIndex = -1;
-int i = 0;
-
 Widget musicTile(
   final _player,
   BuildContext context,
   int index,
+  final previousIndex,
   List songs,
   SongStateNotifier stateNotifier,
+  final snackBar,
   WidgetRef ref,
 ) {
   return GlassBox(
@@ -52,7 +51,7 @@ Widget musicTile(
                 await _player.setFilePath(songs[index].location);
               }
 
-              previousIndex = index;
+              ref.read(StateManagement.indexProvider.state).state = index;
 
               if (!songs[index].isPlaying) {
                 stateNotifier.resetplayPause();
@@ -139,7 +138,7 @@ Widget musicTile(
                     _player.pause();
                     stateNotifier.playPause(index);
                   }
-                  previousIndex = index;
+                  ref.read(StateManagement.indexProvider.state).state = index;
                 },
                 child: StreamBuilder<PlayerState>(
                   stream: _player.playerStateStream,
@@ -183,6 +182,8 @@ Widget musicTile(
                       index,
                       songs,
                       stateNotifier,
+                      snackBar,
+                      context,
                     );
                   },
                   itemBuilder: (context) {
@@ -213,6 +214,19 @@ Widget musicTile(
                           ),
                         ),
                       ),
+                      PopupMenuItem(
+                        value: "Ringtone",
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Text(
+                            "Set Ringtone",
+                            style: GoogleFonts.lora(
+                              color: Colors.white,
+                              fontSize: 20,
+                            ),
+                          ),
+                        ),
+                      ),
                     ];
                   },
                 ),
@@ -230,6 +244,8 @@ void deleteOrShareFile(
   int index,
   List songs,
   SongStateNotifier stateNotifier,
+  final snackBar,
+  BuildContext context,
 ) {
   switch (value) {
     case "Delete":
@@ -240,6 +256,14 @@ void deleteOrShareFile(
         [songs[index].location],
         text: songs[index].title,
       );
+
+      break;
+
+    case "Ringtone":
+      final File ringtoneFile = File(songs[index].location);
+      RingtoneSet.setRingtoneFromFile(ringtoneFile);
+
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
       break;
   }
 }

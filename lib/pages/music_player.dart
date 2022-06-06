@@ -47,11 +47,13 @@ class _MusicPlayerState extends ConsumerState<MusicPlayer> {
   ) async {
     if (nextSong) {
       index = i + 1;
+
       if (index >= songs.length) {
         index = 0;
       }
     } else {
       index = i - 1;
+
       if (index < 0) {
         index = songs.length - 1;
       }
@@ -73,11 +75,14 @@ class _MusicPlayerState extends ConsumerState<MusicPlayer> {
     ref
         .read(StateManagement.progressBarStatusprovider.notifier)
         .getCurrentDuration(_player);
+
+    ref.read(StateManagement.indexProvider.state).state = index;
   }
 
   @override
   Widget build(BuildContext context) {
     List<MySongModel> songs = ref.watch(StateManagement.songListProvider);
+    final previousIndex = ref.watch(StateManagement.indexProvider);
     final SongStateNotifier stateNotifier =
         ref.watch(StateManagement.songListProvider.notifier);
 

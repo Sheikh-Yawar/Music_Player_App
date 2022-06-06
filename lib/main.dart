@@ -1,12 +1,9 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:music_app/pages/error_page.dart';
 import 'package:music_app/pages/music_list.dart';
-
 import 'package:music_app/theme_data.dart';
 import 'package:music_app/utils/get_songs_images.dart';
 import 'package:page_transition/page_transition.dart';

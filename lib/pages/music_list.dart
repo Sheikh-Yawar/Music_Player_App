@@ -1,8 +1,12 @@
+import 'dart:async';
+
+import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:music_app/StateManagement/state_management.dart';
 import 'package:music_app/model/song_model.dart';
 import 'package:music_app/pages/music_player.dart';
@@ -10,6 +14,7 @@ import 'package:music_app/pages/music_player.dart';
 import 'package:music_app/widgets/music_tile.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:sizer/sizer.dart';
 
 import '../utils/get_songs_images.dart';
 
@@ -29,6 +34,26 @@ class _MusicListState extends ConsumerState<MusicList> {
   List<SongModel> dummySongs = [];
   late final _player;
   bool nextSongPressed = false;
+
+  final snackBar = SnackBar(
+    backgroundColor: const Color(0xffe16e03),
+    duration: const Duration(seconds: 20),
+    behavior: SnackBarBehavior.floating,
+    elevation: 8,
+    width: 30.w,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(15),
+    ),
+    dismissDirection: DismissDirection.startToEnd,
+    content: Text(
+      "Done!",
+      textAlign: TextAlign.center,
+      maxLines: 1,
+      style: GoogleFonts.lora(
+        fontSize: 20,
+      ),
+    ),
+  );
 
   getSongs(List<SongModel> dummySongs) async {
     final SongStateNotifier songs =
@@ -74,6 +99,7 @@ class _MusicListState extends ConsumerState<MusicList> {
   @override
   Widget build(BuildContext context) {
     List<MySongModel> songs = ref.watch(StateManagement.songListProvider);
+    final previousIndex = ref.watch(StateManagement.indexProvider);
 
     final SongStateNotifier stateNotifier =
         ref.watch(StateManagement.songListProvider.notifier);
@@ -118,8 +144,10 @@ class _MusicListState extends ConsumerState<MusicList> {
                 _player,
                 context,
                 index,
+                previousIndex,
                 songs,
                 stateNotifier,
+                snackBar,
                 ref,
               ),
             );

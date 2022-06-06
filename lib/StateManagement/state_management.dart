@@ -73,6 +73,6 @@ class StateManagement {
   });
 
   static final indexProvider = StateProvider<int>((ref) {
-    return 0;
+    return -1;
   });
 }
